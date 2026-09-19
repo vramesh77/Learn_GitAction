@@ -6,3 +6,14 @@ node_modules/
 /blob-report/
 /playwright/.cache/
 /playwright/.auth/
+
+Pages/*.js
+Pages/*.d.ts
+Pages/*.map
+tests/*.js
+tests/*.d.ts
+tests/*.map
+fixtures/*.js
+fixtures/*.d.ts
+fixtures/*.map
+playwright.config.js
