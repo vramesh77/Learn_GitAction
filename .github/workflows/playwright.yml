@@ -19,6 +19,18 @@ jobs:
       run: npx playwright install --with-deps
     - name: Run Playwright tests
       run: npx playwright test
+    - name: Compile TypeScript (page objects)
+      if: ${{ !cancelled() }}
+      run: npx tsc
+    - name: Run Cucumber tests
+      if: ${{ !cancelled() }}
+      run: npx cucumber-js --format progress --format html:cucumber-report/report.html
+    - uses: actions/upload-artifact@v4
+      if: ${{ !cancelled() }}
+      with:
+        name: cucumber-report
+        path: cucumber-report/
+        retention-days: 30
     - uses: actions/upload-artifact@v4
       if: ${{ !cancelled() }}
       with:
