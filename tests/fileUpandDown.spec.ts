@@ -5,7 +5,7 @@ import { fileURLToPath } from 'url'
 test('file upload', async()=>{
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename)
-const browser = await chromium.launch({channel:'chrome', headless:false})
+const browser = await chromium.launch({channel:'chrome'})
 const context = await browser.newContext()
 const page = await context.newPage()
 await page.goto("https://the-internet.herokuapp.com/")

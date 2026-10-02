@@ -1,7 +1,7 @@
 import { chromium } from "playwright";
 
 (async () => {
-  const browser = await chromium.launch({ headless: false }); // set false to actually see it
+  const browser = await chromium.launch(); // set false to actually see it
   const context = await browser.newContext();
   const page = await context.newPage();
 
