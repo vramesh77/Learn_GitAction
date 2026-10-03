@@ -6,43 +6,55 @@ on:
     branches: [ main, master ]
 
 permissions:
-  id-token: write   # needed for Azure OIDC login
+  id-token: write   # required for Azure OIDC login (no client secret needed)
   contents: read
 
 jobs:
   test:
     timeout-minutes: 60
     runs-on: ubuntu-latest
-    env:
-      PLAYWRIGHT_SERVICE_URL: ${{ vars.PLAYWRIGHT_SERVICE_URL }}
     steps:
     - uses: actions/checkout@v4
+
     - uses: actions/setup-node@v4
       with:
         node-version: lts/*
-    - uses: azure/login@v2
+
+    - name: Azure login (OIDC)
+      uses: azure/login@v3
       with:
-        client-id: ${{ secrets.AZURE_CLIENT_ID }}
-        tenant-id: ${{ secrets.AZURE_TENANT_ID }}
-        subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+        tenant-id: ${{ vars.AZURE_TENANT_ID }}
+        subscription-id: ${{ vars.AZURE_SUBSCRIPTION_ID }}
+        client-id: ${{ vars.AZURE_CLIENT_ID }}
+        mask-client-id: false
+
     - name: Install dependencies
       run: npm ci
+
+    # Needed for the local Cucumber run (Playwright tests use Azure's remote browsers)
     - name: Install Playwright Browsers
       run: npx playwright install --with-deps
+
     - name: Run Playwright tests (Azure)
-      run: npx playwright test --config=playwright.service.config.js --workers=2
+      run: npx playwright test --config=playwright.service.config.js --workers=20
+      env:
+        PLAYWRIGHT_SERVICE_URL: ${{ vars.PLAYWRIGHT_SERVICE_URL }}
+
     - name: Compile TypeScript (page objects)
       if: ${{ !cancelled() }}
       run: npx tsc
+
     - name: Run Cucumber tests
       if: ${{ !cancelled() }}
       run: npx cucumber-js --format progress --format html:cucumber-report/report.html
+
     - uses: actions/upload-artifact@v4
       if: ${{ !cancelled() }}
       with:
         name: cucumber-report
         path: cucumber-report/
         retention-days: 30
+
     - uses: actions/upload-artifact@v4
       if: ${{ !cancelled() }}
       with:
