@@ -36,7 +36,7 @@ jobs:
       run: npx playwright install --with-deps
 
     - name: Run Playwright tests (Azure)
-      run: npx playwright test --config=playwright.service.config.js --workers=20
+      run: npx playwright test --config=playwright.service.config.ts --workers=2
       env:
         PLAYWRIGHT_SERVICE_URL: ${{ vars.PLAYWRIGHT_SERVICE_URL }}
 
