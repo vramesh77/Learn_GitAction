@@ -18,5 +18,6 @@ const [filechooser] = await Promise.all([page.waitForEvent('filechooser'),page.l
 await filechooser.setFiles(filepath)
 console.log(await page.locator('span:has-text("veera img .jpeg")').textContent())
 //await expect( page.locator('span:has-text("veera img .jpeg")')).toContainText("veera")
+await page.close()
 await context.close()
 })
