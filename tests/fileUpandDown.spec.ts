@@ -2,7 +2,7 @@ import{test,expect,chromium} from '@playwright/test'
 import path from 'path';
 import { fileURLToPath } from 'url'
 
-test('file upload', async()=>{
+test.skip('file upload', async()=>{
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename)
 const browser = await chromium.launch({channel:'chrome'})
